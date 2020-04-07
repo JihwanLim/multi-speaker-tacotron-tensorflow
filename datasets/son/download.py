@@ -6,6 +6,7 @@ import json
 import requests
 import subprocess
 from functools import partial
+from glob import glob
 from bs4 import BeautifulSoup
 
 from utils import get_encoder_name, parallel_run, makedirs
@@ -102,12 +103,19 @@ def download_news_video_and_content(
 
         with open(video_path, "wb") as f:
             for url in video_urls:
-                response = requests.get(url, stream=True)
-                total_size = int(response.headers.get('content-length', 0))
+                try:
+                    response = requests.get(url, stream=True, timeout=20)
+                    # total_size = int(response.headers.get('content-length', 0))
 
-                for chunk in response.iter_content(chunk_size):
-                    if chunk: # filter out keep-alive new chunks
-                        f.write(chunk)
+                    for chunk in response.iter_content(chunk_size):
+                        if chunk: # filter out keep-alive new chunks
+                            f.write(chunk)
+                except requests.exceptions.ConnectionError:
+                    f.close()
+                    os.remove(original_text_path)
+                    os.remove(text_path)
+                    os.remove(video_path)
+                    return False
 
     if not os.path.exists(audio_path):
         encoder = get_encoder_name()
@@ -116,6 +124,19 @@ def download_news_video_and_content(
         subprocess.call(command, shell=True)
 
     return True
+
+
+def get_missing_news_ids():
+    base_dir = os.path.dirname(os.path.realpath(__file__))
+    asset_names = glob(os.path.join(base_dir, 'assets/NB*.txt'))
+    audio_names = glob(os.path.join(base_dir, 'audio/NB*.wav'))
+    video_names = glob(os.path.join(base_dir, 'video/NB*.ts'))
+    fnames = [os.path.splitext(os.path.basename(fname))[0] for fname in
+        min(asset_names, audio_names, video_names, key=len)]
+
+    missing_news_ids = list(set(news_ids) - set(fnames))
+    return missing_news_ids
+
 
 if __name__ == '__main__':
     news_ids = []
@@ -148,3 +169,8 @@ if __name__ == '__main__':
 
     results = parallel_run(
             fn, news_ids, desc="Download news video+text", parallel=True)
+
+    missing_news_ids = get_missing_news_ids()
+    print("Missing news IDs:", missing_news_ids)
+    if missing_news_ids:
+        print("Re-run this script to download missing news videos, audio and texts.")
