@@ -51,7 +51,7 @@ Follow below commands (explain with `son` dataset).
 
     I found the fact that the asset files (.txt) of which the number of rows is only one cause unexpected error during the next step. Honestly I don't know why it causes the error, and I decided I exclude them from the `alignment.json` because it's a tolerable loss enough.
 
-    To see what news IDs will cause errors:
+    To see the news IDs that will cause errors:
 
         # wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'
 
