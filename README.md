@@ -17,7 +17,7 @@ Follow below commands (explain with `son` dataset).
 
 2. Start a docker container.
 
-        $ docker run -it --rm -v /home/lim/repo/multi-speaker-tacotron-tensorflow/datasets:/root/datasets --gpus all tacotron:latest /bin/bash
+        $ docker run -it --rm -v /path/to/multi-speaker-tacotron-tensorflow/datasets:/root/datasets --gpus all tacotron:latest /bin/bash
 
 3. To automate an alignment between sounds and texts, prepare `GOOGLE_APPLICATION_CREDENTIALS` to use [Google Speech Recognition API](https://cloud.google.com/speech/). To get credentials, read [this](https://developers.google.com/identity/protocols/application-default-credentials).
 
