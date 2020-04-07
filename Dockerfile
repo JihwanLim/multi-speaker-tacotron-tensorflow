@@ -9,7 +9,7 @@ RUN sed -i "s/archive.ubuntu.com/mirror.kakao.com/g" /etc/apt/sources.list && \
     apt-get update && apt-get upgrade -y && \
     add-apt-repository ppa:deadsnakes/ppa -y && \
     apt-get update && \
-    apt-get install -y python3 python3-dev python3-pip && \
+    apt-get install -y python3 python3-dev python3-pip ffmpeg && \
     pip install -U --upgrade pip setuptools wheel
 RUN pip install -r /requirements.txt
 RUN python -c "import nltk; nltk.download('punkt')"
