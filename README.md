@@ -60,7 +60,7 @@ Follow below commands (explain with `son` dataset).
         # cp datasets/son/recognition.json datasets/son/recognition.backup.json
         # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do sed -i "/$news_id/d" datasets/son/recognition.json; done
 
-    To check if the number of lines of `alignment.json` was decreased:
+    To check if some lines of `alignment.json` were removed:
 
         # wc -l datasets/son/recognition.json
         49871 datasets/son/recognition.json
