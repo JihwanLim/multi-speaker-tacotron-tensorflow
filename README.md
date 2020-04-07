@@ -55,7 +55,7 @@ Follow below commands (explain with `son` dataset).
 
         # wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'
 
-    What the following command does is to get all news IDs that raise errors and to remove all lines including them from `alignment.json`. Make sure that your working directory is the project's root. I also recommend you to backup the JSON file before.
+    What the following commands do is to get all news IDs that raise errors and to remove all lines including them from `alignment.json`. Make sure that your working directory is the project's root. I also recommend you to backup the JSON file before.
 
         # cp datasets/son/recognition.json datasets/son/recognition.backup.json
         # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do sed -i "/$news_id/d" datasets/son/recognition.json; done
