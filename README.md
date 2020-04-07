@@ -29,7 +29,7 @@ Follow below commands (explain with `son` dataset).
 
         # python -m datasets.son.download
 
-    Finally missing news IDs would be printed or not. If nothing printed, it means all datasets were downloaded successfully without missing news IDs. Otherwise, re-run the command above to try downloading the missing data until they are not printed.
+    After this step is done, missing news IDs would be finally printed or not. If nothing printed, it means all datasets were downloaded successfully without missing news IDs. Otherwise, re-run the command above to try downloading the missing data until they are not printed.
 
 5. Segment all audios on silence.
 
