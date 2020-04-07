@@ -3,45 +3,49 @@
 
 ## Prerequisites
 
-- Python 3.6+
-- FFmpeg
-- [TensorFlow 1.15](https://www.tensorflow.org/install/)
+- [Docker](https://docs.docker.com/install/)
+- [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
 
 
 ## How To Generate Korean datasets
 
 Follow below commands (explain with `son` dataset).
 
-1. Install prerequisites.
+1. Build docker image.
 
-    After preparing [TensorFlow 1.15](https://www.tensorflow.org/install/), install prerequisites with:
+        $ docker build -t tacotron:latest .
 
-        $ pip install -r requirements.txt
-        $ python -c "import nltk; nltk.download('punkt')"
+2. Start a docker container.
 
-2. Download the anchor Son Seok-hee dataset.
+        $ docker run -it --rm -v /home/lim/repo/multi-speaker-tacotron-tensorflow/datasets:/root/datasets --gpus all tacotron:latest /bin/bash
+
+3. To automate an alignment between sounds and texts, prepare `GOOGLE_APPLICATION_CREDENTIALS` to use [Google Speech Recognition API](https://cloud.google.com/speech/). To get credentials, read [this](https://developers.google.com/identity/protocols/application-default-credentials).
+
+        # export GOOGLE_APPLICATION_CREDENTIALS="YOUR-GOOGLE.CREDENTIALS.json"
+
+4. Download the anchor Son Seok-hee dataset.
 
     Make sure that your working directory is project's root.
 
-        $ python -m datasets.son.download
+        # python -m datasets.son.download
 
-3. Set system environment variable to access your Google application credentials.
+    Finally missing news IDs would be printed or not. If nothing printed, it means all datasets were downloaded successfully without missing news IDs. Otherwise, re-run the command above to try downloading the missing data until they are not printed.
 
-    To automate an alignment between sounds and texts, prepare `GOOGLE_APPLICATION_CREDENTIALS` to use [Google Speech Recognition API](https://cloud.google.com/speech/). To get credentials, read [this](https://developers.google.com/identity/protocols/application-default-credentials).
+5. Segment all audios on silence.
 
-        $ export GOOGLE_APPLICATION_CREDENTIALS="YOUR-GOOGLE.CREDENTIALS.json"
+        # python -m audio.silence --audio_pattern "./datasets/son/audio/*.wav" --method=pydub
 
-4. Segment all audio on silence.
+6. By using [Google Speech Recognition API](https://cloud.google.com/speech/), we predict sentences for all segmented audios.
 
-        $ python -m audio.silence --audio_pattern "./datasets/son/audio/*.wav" --method=pydub
+        # python -m recognition.google --audio_pattern "./datasets/son/audio/*.*.wav"
 
-5. By comparing original text and recognised text, save `audio<->text` pair information into `./datasets/son/alignment.json`.
+7. By comparing original text and recognised text, save `audio<->text` pair information into `./datasets/son/alignment.json`.
 
-        $ python3 -m recognition.alignment --recognition_path "./datasets/son/recognition.json" --score_threshold=0.5
+        # python -m recognition.alignment --recognition_path "./datasets/son/recognition.json" --score_threshold=0.5
 
-6. Finally, generated numpy files which will be used in training.
+8. Finally, generated numpy files which will be used in training.
 
-        $ python3 -m datasets.generate_data ./datasets/son/alignment.json
+        # python -m datasets.generate_data ./datasets/son/alignment.json
 
 Because the automatic generation is extremely naive, the dataset is noisy. However, if you have enough datasets (20+ hours with random initialization or 5+ hours with pretrained model initialization), you can expect an acceptable quality of audio synthesis.
 

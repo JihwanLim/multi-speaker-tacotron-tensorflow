@@ -1,7 +1,6 @@
 FROM tensorflow/tensorflow:1.3.0-gpu-py3
 
 ENV PYTHONUNBUFFERED 1
-ENV GOOGLE_APPLICATION_CREDENTIALS "/root/tacotron-272902-a29a3dd603a8.json"
 
 # Install dependencies
 COPY requirements.txt /requirements.txt
