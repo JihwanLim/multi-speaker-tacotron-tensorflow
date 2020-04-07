@@ -60,13 +60,9 @@ Follow below commands (explain with `son` dataset).
         # cp datasets/son/recognition.json datasets/son/recognition.backup.json
         # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do sed -i "/$news_id/d" datasets/son/recognition.json; done
 
-    To check if some lines of `alignment.json` were removed:
+    To check if the news IDs cannot be found in `alignment.json`:
 
-        # wc -l datasets/son/recognition.json
-        49871 datasets/son/recognition.json
-
-        # wc -l datasets/son/recognition.backup.json
-        50363 datasets/son/recognition.backup.json
+        # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do cat datasets/son/recognition.json | grep $news_id; done
 
 8. By comparing original text and recognised text, save `audio<->text` pair information into `./datasets/son/alignment.json`.
 
