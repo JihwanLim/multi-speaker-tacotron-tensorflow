@@ -7,7 +7,9 @@
 - [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
 
 
-## 1. Generate Korean datasets
+## Usage
+
+### 1. Generate Korean datasets
 
 Follow below commands (explain with `son` dataset).
 
@@ -75,7 +77,7 @@ Follow below commands (explain with `son` dataset).
 Because the automatic generation is extremely naive, the dataset is noisy. However, if you have enough datasets (20+ hours with random initialization or 5+ hours with pretrained model initialization), you can expect an acceptable quality of audio synthesis.
 
 
-## 2. Train a model
+### 2. Train a model
 
 The important hyperparameters for a models are defined in `hparams.py`.
 
@@ -103,7 +105,7 @@ To restart a training from previous experiments such as `logs/son-20171015`:
 If you don't have good and enough (10+ hours) dataset, it would be better to use `--initialize_path` to use a well-trained model as initial parameters.
 
 
-## 3. Synthesize Audio
+### 3. Synthesize Audio
 
 You can train your own models with:
 
