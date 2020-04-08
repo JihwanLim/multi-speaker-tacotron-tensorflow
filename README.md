@@ -81,6 +81,10 @@ The important hyperparameters for a models are defined in `hparams.py`.
 
 (**Change `cleaners` in `hparams.py` from `korean_cleaners` to `english_cleaners` to train with English dataset**)
 
+Make sure that `CUDA_VISIBLE_DEVICES` is set so that your GPU can be used for training a model.
+
+    # export CUDA_VISIBLE_DEVICES=0
+
 To train a single-speaker model:
 
     # python train.py --data_path=datasets/son
@@ -94,7 +98,7 @@ To train a multi-speaker model:
 
 To restart a training from previous experiments such as `logs/son-20171015`:
 
-    python train.py --data_path=datasets/son --load_path logs/son-20171015
+    # python train.py --data_path=datasets/son --load_path logs/son-20171015
 
 If you don't have good and enough (10+ hours) dataset, it would be better to use `--initialize_path` to use a well-trained model as initial parameters.
 
@@ -103,11 +107,11 @@ If you don't have good and enough (10+ hours) dataset, it would be better to use
 
 You can train your own models with:
 
-    python app.py --load_path logs/son-20171015 --num_speakers=1
+    # python app.py --load_path logs/son-20171015 --num_speakers=1
 
 or generate audio directly with:
 
-    python synthesizer.py --load_path logs/son-20171015 --text "이거 실화냐?"
+    # python synthesizer.py --load_path logs/son-20171015 --text "이거 실화냐?"
 
 
 ## Disclaimer
