@@ -81,9 +81,9 @@ Because the automatic generation is extremely naive, the dataset is noisy. Howev
 
 The important hyperparameters for a models are defined in `hparams.py`.
 
-(**Change `cleaners` in `hparams.py` from `korean_cleaners` to `english_cleaners` to train with English dataset**)
+**Change `cleaners` in `hparams.py` from `english_cleaners` to `korean_cleaners`.**
 
-Make sure that `CUDA_VISIBLE_DEVICES` is set so that your GPU can be used for training a model.
+And also make sure that `CUDA_VISIBLE_DEVICES` is set so that your GPU can be used for training a model.
 
     # export CUDA_VISIBLE_DEVICES=0
 
