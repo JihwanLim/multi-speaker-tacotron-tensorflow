@@ -7,7 +7,7 @@
 - [nvidia-docker](https://github.com/NVIDIA/nvidia-docker)
 
 
-## How To Generate Korean datasets
+## 1. Generate Korean datasets
 
 Follow below commands (explain with `son` dataset).
 
@@ -60,7 +60,7 @@ Follow below commands (explain with `son` dataset).
         # cp datasets/son/recognition.json datasets/son/recognition.backup.json
         # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do sed -i "/$news_id/d" datasets/son/recognition.json; done
 
-    To check if the news IDs cannot be found in `alignment.json`:
+    To check if the news IDs are removed from `alignment.json`:
 
         # for news_id in $(wc -l datasets/son/assets/NB*.txt | grep " 0 datasets*" | awk -F '/' '{print($4)}' | awk -F '.' '{print($1)}'); do cat datasets/son/recognition.json | grep $news_id; done
 
@@ -73,6 +73,41 @@ Follow below commands (explain with `son` dataset).
         # python -m datasets.generate_data ./datasets/son/alignment.json
 
 Because the automatic generation is extremely naive, the dataset is noisy. However, if you have enough datasets (20+ hours with random initialization or 5+ hours with pretrained model initialization), you can expect an acceptable quality of audio synthesis.
+
+
+## 2. Train a model
+
+The important hyperparameters for a models are defined in `hparams.py`.
+
+(**Change `cleaners` in `hparams.py` from `korean_cleaners` to `english_cleaners` to train with English dataset**)
+
+To train a single-speaker model:
+
+    # python train.py --data_path=datasets/son
+    # python train.py --data_path=datasets/son --initialize_path=PATH_TO_CHECKPOINT
+
+To train a multi-speaker model:
+
+> after change `model_type` in `hparams.py` to `deepvoice` or `simple`.
+
+    # python train.py --data_path=datasets/son1,datasets/son2
+
+To restart a training from previous experiments such as `logs/son-20171015`:
+
+    python train.py --data_path=datasets/son --load_path logs/son-20171015
+
+If you don't have good and enough (10+ hours) dataset, it would be better to use `--initialize_path` to use a well-trained model as initial parameters.
+
+
+## 3. Synthesize Audio
+
+You can train your own models with:
+
+    python app.py --load_path logs/son-20171015 --num_speakers=1
+
+or generate audio directly with:
+
+    python synthesizer.py --load_path logs/son-20171015 --text "이거 실화냐?"
 
 
 ## Disclaimer
